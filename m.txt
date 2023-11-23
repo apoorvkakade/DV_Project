@@ -1,0 +1,174 @@
+d3.csv("data/Buildings.csv").then(function(data) {
+
+  // Determine the domain for the scales
+  const maxX = d3.max(data, d => {
+      let coords = d.location.match(/(\(\((.*?)\)\))/)[2]
+      .split(', ')
+      .map(pair => pair.split(' ').map(Number));
+      return d3.max(coords, pair => pair[0]);
+   });
+   const maxY = d3.max(data, d => {
+      let coords = d.location.match(/(\(\((.*?)\)\))/)[2]
+      .split(', ')
+      .map(pair => pair.split(' ').map(Number));
+      return d3.max(coords, pair => pair[1]);
+   });
+ 
+  // Specify the desired dimensions for the SVG container
+  const svgWidth = 500;
+  const svgHeight = 1000;
+ 
+  // Create an SVG container
+  const svg = d3.select('#map')
+          .append('svg')
+          .attr('width', svgWidth)
+          .attr('height', svgHeight);
+ 
+  // Check if the SVG container is correctly created and appended to the DOM
+  if (!svg.node()) {
+      console.error('SVG container is not correctly created or appended to the DOM');
+      return;
+  }
+ 
+  data.forEach(function(d) {
+    // Extract the polygon coordinates from the WKT format
+    let coords = d.location.match(/(\(\((.*?)\)\))/)[2]
+    .split(', ')
+    .map(pair => pair.split(' ').map(Number));
+ 
+    // Scale the coordinates to fit within the new dimensions
+    const scaledCoords = coords.map(pair => [
+        (pair[0] / maxX) * svgWidth,
+        (pair[1] / maxY) * svgHeight
+    ]);
+ 
+    // Create a path data string
+    const pathData = "M" + scaledCoords.map(pair => pair.join(',')).join('L') + "Z";
+ 
+    // Draw the polygon
+    const path = svg.append('path')
+        .attr('d', pathData)
+        .attr('fill', function() {
+            if (d.buildingType === 'Commercial') {
+             return 'green';
+            } else if (d.buildingType === 'Residential') {
+             return 'blue';
+            } else {
+             return 'grey';
+            }
+        });
+
+    console.log(d.buildingId);
+
+
+ });
+ 
+ }).catch(function(error) {
+  console.error('Error loading CSV data:', error);
+ });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ d3.csv("data/Buildings.csv").then(function(data) {
+
+  // Determine the domain for the scales
+  const maxX = d3.max(data, d => {
+    let coords = d.location.match(/(\(\((.*?)\)\))/)[2]
+      .split(', ')
+      .map(pair => pair.split(' ').map(Number));
+    return d3.max(coords, pair => pair[0]);
+  });
+  const maxY = d3.max(data, d => {
+    let coords = d.location.match(/(\(\((.*?)\)\))/)[2]
+      .split(', ')
+      .map(pair => pair.split(' ').map(Number));
+    return d3.max(coords, pair => pair[1]);
+  });
+
+  const minX = d3.min(data, d => {
+    let coords = d.location.match(/(\(\((.*?)\)\))/)[2]
+      .split(', ')
+      .map(pair => pair.split(' ').map(Number));
+    return d3.min(coords, pair => pair[0]);
+  });
+  const minY = d3.min(data, d => {
+    let coords = d.location.match(/(\(\((.*?)\)\))/)[2]
+      .split(', ')
+      .map(pair => pair.split(' ').map(Number));
+    return d3.min(coords, pair => pair[1]);
+  });
+
+  // Specify the desired dimensions for the SVG container
+  const svgWidth = 500;
+  const svgHeight = 1000;
+
+  // Create an SVG container
+  const svg = d3.select('#map')
+    .append('svg')
+    .attr('width', svgWidth)
+    .attr('height', svgHeight);
+
+  // Check if the SVG container is correctly created and appended to the DOM
+  if (!svg.node()) {
+    console.error('SVG container is not correctly created or appended to the DOM');
+    return;
+  }
+
+  data.forEach(function(d) {
+    // Extract the polygon coordinates from the WKT format
+    let coords = d.location.match(/(\(\((.*?)\)\))/)[2]
+      .split(', ')
+      .map(pair => pair.split(' ').map(Number));
+
+    // Scale the coordinates to fit within the new dimensions
+    const scaledCoords = coords.map(pair => [
+      ((pair[0] - minX) / (maxX - minX)) * svgWidth,
+      ((pair[1] - minY) / (maxY - minY)) * svgHeight
+    ]);
+
+    // Create a path data string
+    const pathData = "M" + scaledCoords.map(pair => pair.join(',')).join('L') + "Z";
+
+    // Draw the polygon
+    const path = svg.append('path')
+      .attr('d', pathData)
+      .attr('fill', function() {
+        if (d.buildingType === 'Commercial') {
+          return 'green';
+        } else if (d.buildingType === 'Residential') {
+          return 'blue';
+        } else {
+          return 'grey';
+        }
+      });
+
+    console.log(d.buildingId);
+  });
+
+}).catch(function(error) {
+  console.error('Error loading CSV data:', error);
+});
