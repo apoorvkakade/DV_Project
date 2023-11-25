@@ -1,0 +1,28 @@
+.box
+{
+    width:500px;
+    height: 500px;
+    margin: 10px;
+}
+
+.svg-container
+{
+    display: flex;
+}
+
+.tooltip {
+    position: absolute;
+    text-align: center;
+    width: auto;
+    height: auto;
+    padding: 2px;
+    font: 12px;
+    background: white;
+    border: 2px;
+    border-style: solid;
+    border-color: black;
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+  }
